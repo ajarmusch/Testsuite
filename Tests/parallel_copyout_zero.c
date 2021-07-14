@@ -12,7 +12,7 @@ int test1(){
         a[x] = rand() / (real_t)(RAND_MAX / 10);
         b[x] = 0.0;
     }
-
+ 
     #pragma acc data copyin(a[0:n])
     {
         #pragma acc parallel copyout(c[0:n])
