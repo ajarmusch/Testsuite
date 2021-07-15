@@ -12,18 +12,18 @@ int test1(){
         a[x] = rand() / (real_t)(RAND_MAX / 10);
         b[x] = 0.0;
     }
- 
-    #pragma acc data copyin(a[0:n])
+
+    #pragma acc data copyin(a[0:n]) copyout(b[0:n])
     {
-        #pragma acc parallel copyout(c[0:n])
+      #pragma acc parallel
+      {
+        #pragma acc loop
         {
-            #pragma acc loop
-            {
-                for (int x = 0; x < n; ++x){
-                  b[x] += a[x];
-                }
-            }
+          for (int x = 0; x < n; ++x){
+            b[x] += a[x];
+          }
         }
+      }
     }
 
     for (int x = 0; x < n; ++x){
@@ -51,23 +51,26 @@ int test2(){
         b[x] = 0.0;
     }
 
-    #pragma acc data copyin(a[0:n])
+    #pragma acc data copyin(a[0:n]) copyout(b[0:n])
     {
-        #pragma acc parallel copyout(c[0:n])
+      #pragma acc parallel
+      {
+        #pragma acc loop
         {
-            #pragma acc loop
-            {
-                for (int x = 0; x < n; ++x){
-                  b[x] = 0.0;
-                }
-            }
-            #pragma acc loop
-            {
-                for (int x = 0; x < n; ++x){
-                  b[x] += a[x];
-                }
-            }
+          for (int x = 0; x < n; ++x){
+            b[x] = 0.0;
+          }
         }
+      }
+      #pragma acc parallel
+      {
+        #pragma acc loop
+        {
+          for (int x = 0; x < n; ++x){
+            b[x] += a[x];
+          }
+        }
+      }
     }
 
     for (int x = 0; x < n; ++x){
@@ -95,17 +98,17 @@ int test3(){
         b[x] = 0;
     }
 
-    #pragma acc data copyin(a[0:n])
+    #pragma acc data copyin(a[0:n]) copyout(zero: b[0:n])
     {
-        #pragma acc parallel copyout(zero: c[0:n])
+      #pragma acc parallel
+      {
+        #pragma acc loop
         {
-            #pragma acc loop
-            {
-                for (int x = 0; x < n; ++x){
-                  b[x] += a[x];
-                }
-            }
+          for (int x = 0; x < n; ++x){
+            b[x] += a[x];
+          }
         }
+      }
     }
 
     for (int x = 0; x < n; ++x){

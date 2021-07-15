@@ -13,17 +13,17 @@ int test1(){
         b[x] = 0.0;
     }
 
-    #pragma acc data copyin(a[0:n]) copy(c[0:n])
+    #pragma acc data copyin(a[0:n]) create(b[0:n])
     {
-        #pragma acc parallel create(b[0:n])
+      #pragma acc parallel
+      {
+        #pragma acc loop
         {
-          #pragma acc loop
-          {
-            for (int x = 0; x < n; ++x){
-                b[x] += a[x];
-            }
+          for (int x = 0; x < n; ++x){
+            b[x] += a[x];
           }
         }
+      }
     }
 
     for (int x = 0; x < n; ++x){
@@ -50,23 +50,26 @@ int test2(){
         b[x] = 0.0;
     }
 
-    #pragma acc data copyin(a[0:n]) copy(c[0:n])
+    #pragma acc data copyin(a[0:n]) create(b[0:n])
     {
-        #pragma acc parallel create(b[0:n])
+      #pragma acc parallel
+      {
+        #pragma acc loop
         {
-          #pragma acc loop
-          {
-            for (int x = 0; x < n; ++x){
-                b[x] = 0.0;
-            }
-          }
-          #pragma acc loop
-          {
-            for (int x = 0; x < n; ++x){
-                b[x] += a[x];
-            }
+          for (int x = 0; x < n; ++x){
+            b[x] = 0.0;
           }
         }
+      }
+      #pragma acc parallel
+      {
+        #pragma acc loop
+        {
+          for (int x = 0; x < n; ++x){
+            b[x] += a[x];
+          }
+        }
+      }
     }
 
     for (int x = 0; x < n; ++x){
@@ -93,16 +96,16 @@ int test3(){
         b[x] = 0.0;
     }
 
-    #pragma acc data copyin(a[0:n]) copy(c[0:n])
+    #pragma acc data copyin(a[0:n]) create(zero: b[0:n])
     {
-      #pragma acc parallel create(zero: b[0:n])
+      #pragma acc parallel
       {
-          #pragma acc loop
-          {
-            for (int x = 0; x < n; ++x){
-                b[x] += a[x];
-            }
+        #pragma acc loop
+        {
+          for (int x = 0; x < n; ++x){
+            b[x] += a[x];
           }
+        }
       }
     }
 
