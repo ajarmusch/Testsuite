@@ -5,7 +5,7 @@ int test1(){
     int err = 0;
     srand(SEED);
 
-    #pragma acc wait(1) init(1 == 1)
+    #pragma acc wait(1) if(1 == 1)
 
     return err;
 }
