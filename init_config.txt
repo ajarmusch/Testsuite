@@ -15,7 +15,7 @@ FC:nvfortran
 !If enabling them is impossible, the infrastructure will be unable to detect which portions of the tests are causing
 !compilation/runtime errors. 
 
-CCFlags:-fast -acc -ta=multicore
+CCFlags:-fast -acc -ta=
 CPPFlags:-fast -acc -ta=multicore
 FCFlags:-fast -acc -ta=multicore
 
