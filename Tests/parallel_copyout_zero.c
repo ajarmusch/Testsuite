@@ -2,6 +2,7 @@
 #ifndef T1
 //T1:parallel,data,executable-data,data-region,V:3.0-3.1
 int test1(){
+    //for development
     int err = 0;
     srand(SEED);
 
@@ -40,6 +41,7 @@ int test1(){
 #ifndef T2
 //T2:runtime,data,executable-data,construct-independent,V:3.0-3.1
 int test2(){
+    //for development; logic test
     int err = 0;
     srand(SEED);
 
@@ -87,6 +89,7 @@ int test2(){
 #ifndef T3
 //T3:runtime,data,executable-data,construct-independent,V:3.0-3.1
 int test3(){
+    //public test
     int err = 0;
     srand(SEED);
 
