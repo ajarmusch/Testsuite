@@ -2,7 +2,7 @@
 #ifndef T1
 //T1:parallel,data,executable-data,data-region,V:3.0-3.1
 int test1(){
-    //for development
+    //for development; compilation error test
     int err = 0;
     srand(SEED);
 
