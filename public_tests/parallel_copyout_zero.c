@@ -124,57 +124,6 @@ int test3(){
 }
 #endif
 
-#ifndef T4
-//T4:parallel,data,data-region,devonly,V:3.0-3.1
-int test4(){
-    //for development; logic test
-    int err = 0;
-    srand(SEED);
-
-    real_t * a = (real_t *)malloc(n * sizeof(real_t));
-    real_t * b = (real_t *)malloc(n * sizeof(real_t));
-
-    int* hasDevice = (int *) malloc(sizeof(int));
-    hasDevice[0] = 1;
-    #pragma acc enter data copyin(hasDevice[0:1])
-    #pragma acc parallel present(hasDevice[0:1])
-    {
-      hasDevice[0] = 0;
-    }
-
-    if (hasDevice[0] == 1){
-      for (int x = 0; x < n; ++x){
-        a[x] = rand() / (real_t)(RAND_MAX / 10);
-        b[x] = 0;
-      }
-
-      #pragma acc data copyin(a[0:n])
-      {
-        #pragma acc parallel copyout(zero: b[0:n])
-        {
-          #pragma acc loop
-          {
-            for (int x = 0; x < n; ++x){
-              b[x] += a[x];
-            }
-          }
-        }
-      }
-
-      for (int x = 0; x < n; ++x){
-          if(fabs(a[x] - b[x]) > PRECISION){
-                  err += 1;
-                  break;
-          }
-      }
-    }
-
-    return err;
-}
-#endif
-
-
-
 int main(){
     int failcode = 0;
 
@@ -204,15 +153,6 @@ int main(){
     }
     if (failed != 0){
         failcode = failcode + (1 << 2);
-    }
-#endif
-#ifndef T4
-    failed = 0;
-    for (int x = 0; x < NUM_TEST_CALLS; ++x){
-        failed = failed + test4();
-    }
-    if (failed != 0){
-        failcode = failcode + (1 << 3);
     }
 #endif
     return failcode;
