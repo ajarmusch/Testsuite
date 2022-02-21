@@ -9,12 +9,12 @@ int test1(){
 
     for (int x = 0; x < n; ++x){
         a[x] = rand() / (real_t)(RAND_MAX / 10);
-        b[x] = rand() / (real_t)(RAND_MAX / 10);
+        b[x] = 0;
     }
 
-    #pragma acc data copy(a[0:n])
+    #pragma acc data copy(a[0:n]) copyout(b[0:n])
     {
-        #pragma acc parallel loop independent
+        #pragma acc parallel loop
         for (int x = 0; x < n; ++x){
             b[x] = a[x];
         }
@@ -29,38 +29,93 @@ int test1(){
     return err;
 }
 #endif
-
 #ifndef T2
-//T2:parallel,loop,V:2.7-3.2
+//T2:parallel,loop,combined-constructs,V:2.7-3.2
 int test2(){
     int err = 0;
     srand(SEED);
     real_t * a = (real_t *)malloc(n * sizeof(real_t));
     real_t * b = (real_t *)malloc(n * sizeof(real_t));
-    real_t * c = (real_t *)malloc(n * sizeof(real_t));
 
     for (int x = 0; x < n; ++x){
-      a[x] = 0.0;
-      b[x] = rand() / (real_t)(RAND_MAX / 10);
-      c[x] = rand() / (real_t)(RAND_MAX / 10);
+        a[x] = rand() / (real_t)(RAND_MAX / 10);
+        b[x] = 0;
     }
-    #pragma acc data copy(a[0:n], b[0:n], c[0:n])
+
+    #pragma acc data copy(a[0:n]) copyin(b[0:n])
+    {
+        #pragma acc parallel loop
+        for (int x = 0; x < n; ++x){
+            b[x] = a[x];
+        }
+    }
+
+    for (int x = 0; x < n; ++x){
+        if (fabs(0 - b[x]) > PRECISION){
+            err = 1;
+        }
+    }
+
+    return err;
+}
+#endif
+#ifndef T3
+//T3:parallel,loop,V:2.7-3.2
+int test3(){
+    int err = 0;
+    srand(SEED);
+    real_t * a = (real_t *)malloc(n * sizeof(real_t));
+    real_t * b = (real_t *)malloc(n * sizeof(real_t));
+
+    for (int x = 0; x < n; ++x){
+      a[x] = rand() / (real_t)(RAND_MAX / 10);
+      b[x] = 0;
+    }
+    #pragma acc data copy(a[0:n]) copyin(b[0:n])
     {
         #pragma acc parallel
         {
-            #pragma acc loop
+            #pragma acc loop independent
             for (int x = 0; x < n; ++x){
-                a[x] = b[x];
-            }
-            #pragma acc loop
-            for (int x = 0; x < n; ++x){
-                a[x] += c[x];
+                b[x] = a[x];
             }
         }
     }
 
     for (int x = 0; x < n; ++x){
-        if (fabs(a[x] - (b[x] + c[x])) > PRECISION * 2){
+        if (fabs(0 - b[x]) > PRECISION){
+            err = 1;
+        }
+    }
+
+    return err;
+}
+#endif
+#ifndef T4
+//T4:parallel,loop,V:2.7-3.2
+int test4(){
+    int err = 0;
+    srand(SEED);
+    real_t * a = (real_t *)malloc(n * sizeof(real_t));
+    real_t * b = (real_t *)malloc(n * sizeof(real_t));
+
+    for (int x = 0; x < n; ++x){
+      a[x] = rand() / (real_t)(RAND_MAX / 10);
+      b[x] = 0;
+    }
+    #pragma acc data copy(a[0:n]) copyout(b[0:n])
+    {
+        #pragma acc parallel
+        {
+            #pragma acc loop independent
+            for (int x = 0; x < n; ++x){
+                b[x] = a[x];
+            }
+        }
+    }
+
+    for (int x = 0; x < n; ++x){
+        if (fabs(a[x] - b[x]) > PRECISION){
             err = 1;
         }
     }
@@ -88,6 +143,24 @@ int main(){
     }
     if (failed != 0){
         failcode = failcode + (1 << 1);
+    }
+#endif
+#ifndef T3
+    failed = 0;
+    for (int x = 0; x < NUM_TEST_CALLS; ++x){
+        failed = failed + test3();
+    }
+    if (failed != 0){
+        failcode = failcode + (1 << 2);
+    }
+#endif
+#ifndef T4
+    failed = 0;
+    for (int x = 0; x < NUM_TEST_CALLS; ++x){
+        failed = failed + test4();
+    }
+    if (failed != 0){
+        failcode = failcode + (1 << 3);
     }
 #endif
     return failcode;
