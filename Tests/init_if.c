@@ -5,17 +5,22 @@ int test1(){
     int err = 0;
     srand(SEED);
     real_t * a = (real_t *)malloc(n * sizeof(real_t));
+    real_t * b = (real_t *)malloc(n * sizeof(real_t));
 
     for (int x = 0; x < n; ++x){
         a[x] = rand() / (real_t)(RAND_MAX / 10);
+        b[x] = 0;
     }
 
     for (int x = 0; x < n; ++x){
         #pragma acc init if(a[x] = a[x])
+        {
+            b[x] = a[x]
+        }
     }
 
     for (int x = 0; x < n; ++x){
-        if (fabs(a[x] - a[x]) > PRECISION){
+        if (fabs(a[x] - b[x]) > PRECISION){
             err += 1;
         }
     }
@@ -31,18 +36,24 @@ int test2(){
     srand(SEED);
     real_t * a = (real_t *)malloc(n * sizeof(real_t));
     real_t * b = (real_t *)malloc(n * sizeof(real_t));
+    real_t * c = (real_t *)malloc(n * sizeof(real_t));
 
     for (int x = 0; x < n; ++x){
         a[x] = rand() / (real_t)(RAND_MAX / 10);
         b[x] = rand() / (real_t)(RAND_MAX / 10);
+        c[x] = a[x];
     }
 
     for (int x = 0; x < n; ++x){
         #pragma acc init if(a[x] = b[x])
+        {
+            c[x] = a[x] * 2;
+        }
+
     }
 
     for (int x = 0; x < n; ++x){
-        if (fabs(a[x] - a[x]) > PRECISION){
+        if (fabs(a[x] - c[x]) > PRECISION){
             err += 1;
         }
     }
