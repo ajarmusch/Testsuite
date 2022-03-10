@@ -15,7 +15,7 @@ int test1(){
         #pragma acc parallel
         {
 	    #pragma acc loop independent
-            for (int x = 0; x < n; ++x){
+            for (int x = 1; x < n; ++x){
                 #pragma acc atomic
                 {
                     a[x] = a[x-1] + 1;
