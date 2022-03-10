@@ -4,8 +4,26 @@
 int test1(){
     int err = 0;
     srand(SEED);
+    real_t * a = (real_t *)malloc(n * sizeof(real_t));
+    real_t * b = (real_t *)malloc(n * sizeof(real_t));
 
-    #pragma acc shutdown if(1 == 1)
+    for (int x = 0; x < n; ++x){
+        a[x] = rand() / (real_t)(RAND_MAX / 10);
+        b[x] = 0;
+    }
+
+    for (int x = 0; x < n; ++x){
+        #pragma acc shutdown if(a[x] == a[x])
+        {
+            b[x] = a[x];
+        }
+    }
+
+    for (int x = 0; x < n; ++x){
+        if (fabs(a[x] - b[x]) > PRECISION){
+            err += 1;
+        }
+    }
 
     return err;
 }
