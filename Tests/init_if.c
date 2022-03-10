@@ -13,7 +13,7 @@ int test1(){
     }
 
     for (int x = 0; x < n; ++x){
-        #pragma acc init if(a[x] = a[x])
+        #pragma acc init if(a[x] == a[x])
         {
             b[x] = a[x];
         }
@@ -45,7 +45,7 @@ int test2(){
     }
 
     for (int x = 0; x < n; ++x){
-        #pragma acc init if(a[x] = b[x])
+        #pragma acc init if(a[x] == b[x])
         {
             c[x] = a[x] * 2;
         }
