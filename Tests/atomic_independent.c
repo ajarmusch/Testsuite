@@ -19,10 +19,8 @@ int test1(){
 	    #pragma acc loop independent
             for (int x = 0; x < n; ++x){
                 #pragma acc atomic
-                // {
                     a[x] = a[x] * 2;
                     b[x] = a[x];
-                // }
             }
         }
     }
@@ -75,15 +73,15 @@ int test2(){
 int main(){
     int failcode = 0;
     int failed;
-// #ifndef T1
-//    failed = 0;
-//    for (int x = 0; x < NUM_TEST_CALLS; ++x){
-//        failed = failed + test1();
-//    }
-//    if (failed != 0){
-//        failcode = failcode + (1 << 0);
-//    }
-// #endif
+#ifndef T1
+   failed = 0;
+   for (int x = 0; x < NUM_TEST_CALLS; ++x){
+       failed = failed + test1();
+   }
+   if (failed != 0){
+       failcode = failcode + (1 << 0);
+   }
+#endif
 #ifndef T2
     failed = 0;
     for (int x = 0; x < NUM_TEST_CALLS; ++x){
