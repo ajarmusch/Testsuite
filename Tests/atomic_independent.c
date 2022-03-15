@@ -36,7 +36,7 @@ int test1(){
 #endif
 
 #ifndef T2
-//T2:parallel,loop,combined-constructs,V:2.7-3.2
+//T2:parallel,loop,V:2.7-3.2
 int test2(){
     int err = 0;
     srand(SEED);
@@ -45,7 +45,7 @@ int test2(){
 
     for (int x = 0; x < n; ++x){
         a[x] = rand() / (real_t)(RAND_MAX / 10);
-        a_copy[x] = a[x];
+        a_copy[x] = rand() / (real_t)(RAND_MAX / 10);
     }
 
     #pragma acc data copy(a[0:n])
@@ -53,17 +53,15 @@ int test2(){
         #pragma acc parallel 
         {
             #pragma acc loop independent
-                for (int x = 1; x < n; ++x){
+                for (int x = 0; x < n; ++x){
                     #pragma acc atomic
-                    a[x] = a[x - 1] + a[x];
+                    a_copy[x] = a[x];
                 }
         }
     }
 
-    real_t rolling_total = 0.0;
     for (int x = 0; x < n; ++x){
-        rolling_total += a_copy[x];
-        if (fabs(rolling_total - a[x]) > PRECISION){
+        if (fabs(a_copy[x] - a[x]) > PRECISION){
             err = 1;
         }
     }
