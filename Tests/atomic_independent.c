@@ -48,7 +48,7 @@ int test2(){
         a_copy[x] = rand() / (real_t)(RAND_MAX / 10);
     }
 
-    #pragma acc data copy(a[0:n])
+    #pragma acc data copy(a[0:n], a_copy[x])
     {
         #pragma acc parallel 
         {
