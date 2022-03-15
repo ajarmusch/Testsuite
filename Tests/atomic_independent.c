@@ -42,7 +42,6 @@ int test2(){
     srand(SEED);
     real_t * a = (real_t *)malloc(n * sizeof(real_t));
     real_t * a_copy = (real_t *)malloc(n * sizeof(real_t));
-    real_t * b = (real_t *)malloc(n * sizeof(real_t));
 
     for (int x = 0; x < n; ++x){
         a[x] = rand() / (real_t)(RAND_MAX / 10);
@@ -51,21 +50,23 @@ int test2(){
 
     #pragma acc data copy(a[0:n])
     {
-      #pragma acc parallel loop independent
-      for (int x = 1; x < n; ++x){
-        #pragma acc atomic
-        a[x] = a[x - 1] + a[x];
-      }
+        #pragma acc parallel 
+        {
+            #pragma acc loop independent
+                for (int x = 1; x < n; ++x){
+                    #pragma acc atomic
+                    a[x] = a[x - 1] + a[x];
+                }
+        }
     }
 
     real_t rolling_total = 0.0;
     for (int x = 0; x < n; ++x){
-      rolling_total += a_copy[x];
-      if (fabs(rolling_total - a[x]) > PRECISION){
-        err = 1;
-      }
+        rolling_total += a_copy[x];
+        if (fabs(rolling_total - a[x]) > PRECISION){
+            err = 1;
+        }
     }
-
     return err;
 }
 #endif
