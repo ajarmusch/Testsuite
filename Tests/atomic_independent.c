@@ -41,27 +41,27 @@ int test2(){
     int err = 0;
     srand(SEED);
     real_t * a = (real_t *)malloc(n * sizeof(real_t));
-    real_t * a_copy = (real_t *)malloc(n * sizeof(real_t));
+    real_t * b = (real_t *)malloc(n * sizeof(real_t));
 
     for (int x = 0; x < n; ++x){
         a[x] = rand() / (real_t)(RAND_MAX / 10);
-        a_copy[x] = rand() / (real_t)(RAND_MAX / 10);
+        b[x] = rand() / (real_t)(RAND_MAX / 10);
     }
 
-    #pragma acc data copy(a[0:n], a_copy[0:n])
+    #pragma acc data copy(a[0:n], b[0:n])
     {
         #pragma acc parallel 
         {
             #pragma acc loop independent
                 for (int x = 0; x < n; ++x){
                     #pragma acc atomic
-                    a_copy[x] = a[x];
+                    b[x] = a[x];
                 }
         }
     }
 
     for (int x = 0; x < n; ++x){
-        if (fabs(a_copy[x] - a[x]) > PRECISION){
+        if (fabs(b[x] - a[x]) > PRECISION){
             err = 1;
         }
     }
