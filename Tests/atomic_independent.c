@@ -45,7 +45,7 @@ int test2(){
 
     for (int x = 0; x < n; ++x){
         a[x] = rand() / (real_t)(RAND_MAX / 10);
-        b[x] = rand() / (real_t)(RAND_MAX / 10);
+        b[x] = 0;
     }
 
     #pragma acc data copy(a[0:n], b[0:n])
@@ -55,13 +55,13 @@ int test2(){
             #pragma acc loop independent
                 for (int x = 0; x < n; ++x){
                     #pragma acc atomic
-                        a[x] = 0;
+                        a[x] = b[x];
                 }
         }
     }
 
     for (int x = 0; x < n; ++x){
-        if (fabs(a[x] - 0) > PRECISION){
+        if (fabs(a[x] - b[x]) > PRECISION){
             err = 1;
         }
     }
