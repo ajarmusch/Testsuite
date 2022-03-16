@@ -45,7 +45,7 @@ int test2(){
     }
 
     for (int x = 0; x < n; ++x){
-        #pragma acc init if(dev))
+        #pragma acc init if(dev)
         {
             b[x] = 0;
         }
