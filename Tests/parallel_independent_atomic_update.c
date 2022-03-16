@@ -9,7 +9,7 @@ int test1(){
 
     for (int x = 0; x < n; ++x){
         a[x] = rand() / (real_t)(RAND_MAX / 10);
-        b[x] = rand() / (real_t)(RAND_MAX / 10);
+        b[x] = a[x];
     }
 
     #pragma acc data copy(a[0:n])
@@ -25,7 +25,7 @@ int test1(){
     }
 
     for (int x = 0; x < n; ++x){
-        if (fabs(a[x] - b[x]) > PRECISION){
+        if (fabs((a[x] + 1) - b[x]) > PRECISION){
             err += 1;
         }
     }
