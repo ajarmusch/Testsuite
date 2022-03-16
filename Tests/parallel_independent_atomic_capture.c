@@ -19,7 +19,7 @@ int test1(){
 	    #pragma acc loop independent
             for (int x = 0; x < n; ++x){
                 #pragma acc atomic capture
-                    b[x] = (a[x])++;
+                    b[x] = ++(a[x]);
             }
         }
     }
