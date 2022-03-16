@@ -45,7 +45,7 @@ int test2(){
     }
 
     for (int x = 0; x < n; ++x){
-        #pragma acc init if(a[x]:b[x])
+        #pragma acc init
         {
             c[x] = a[x] * 2;
         }
