@@ -13,7 +13,7 @@ int test1(){
     }
 
     for (int x = 0; x < n; ++x){
-        #pragma acc init 
+        #pragma acc init if(true)
         {
             b[x] = a[x];
         }
@@ -36,24 +36,22 @@ int test2(){
     srand(SEED);
     real_t * a = (real_t *)malloc(n * sizeof(real_t));
     real_t * b = (real_t *)malloc(n * sizeof(real_t));
-    real_t * c = (real_t *)malloc(n * sizeof(real_t));
 
     for (int x = 0; x < n; ++x){
         a[x] = rand() / (real_t)(RAND_MAX / 10);
         b[x] = rand() / (real_t)(RAND_MAX / 10);
-        c[x] = a[x];
     }
 
     for (int x = 0; x < n; ++x){
-        #pragma acc init
+        #pragma acc init if(true)
         {
-            c[x] = a[x] * 2;
+            b[x] = a[x];
         }
 
     }
 
     for (int x = 0; x < n; ++x){
-        if (fabs(a[x] - c[x]) > PRECISION){
+        if (fabs(a[x] - b[x]) > PRECISION){
             err += 1;
         }
     }
