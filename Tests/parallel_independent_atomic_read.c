@@ -18,8 +18,8 @@ int test1(){
         {
 	    #pragma acc loop independent
             for (int x = 0; x < n; ++x){
-                #pragma acc atomic write
-                    b[x] = a[x] * 2;
+                #pragma acc atomic read
+                    b[x] = a[x];
             }
         }
     }
