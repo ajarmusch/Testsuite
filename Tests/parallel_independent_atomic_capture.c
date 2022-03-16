@@ -18,8 +18,8 @@ int test1(){
         {
 	    #pragma acc loop independent
             for (int x = 0; x < n; ++x){
-                #pragma acc atomic write
-                    b[x] = a[x];
+                #pragma acc atomic capture
+                    b[x] = ++a[x];
             }
         }
     }
@@ -33,7 +33,6 @@ int test1(){
     return err;
 }
 #endif
-
 
 int main(){
     int failcode = 0;
