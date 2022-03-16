@@ -54,7 +54,7 @@ int test2(){
         {
             #pragma acc loop independent
                 for (int x = 0; x < n; ++x){
-                    #pragma acc atomic
+                    #pragma acc atomic capture
                         a[x] = b[x];
                 }
         }
