@@ -14,7 +14,7 @@ int test1(){
 
     #pragma acc data copy(a[0:n], b[0:n])
     {
-        #pragma acc kernels
+        #pragma acc parallel
         {
 	    #pragma acc loop independent
             for (int x = 0; x < n; ++x){
@@ -50,11 +50,11 @@ int test2(){
 
     #pragma acc data copy(a[0:n], b[0:n])
     {
-        #pragma acc kernels
+        #pragma acc parallel 
         {
             #pragma acc loop independent
                 for (int x = 0; x < n; ++x){
-                    #pragma acc atomic capture
+                    // #pragma acc atomic
                         a[x] = b[x];
                 }
         }
