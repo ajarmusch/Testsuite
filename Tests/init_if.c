@@ -43,7 +43,7 @@ int test2(){
     }
 
     for (int x = 0; x < n; ++x){
-        #pragma acc init if{true}
+        #pragma acc init if(true)
         {
             b[x] = a[x];
         }
