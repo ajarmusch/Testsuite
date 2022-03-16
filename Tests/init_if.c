@@ -13,7 +13,7 @@ int test1(){
     }
 
     for (int x = 0; x < n; ++x){
-        #pragma acc init if(1)
+        #pragma acc init if (1)
         {
             b[x] = a[x];
         }
@@ -43,7 +43,7 @@ int test2(){
     }
 
     for (int x = 0; x < n; ++x){
-        #pragma acc init if(0)
+        #pragma acc init if (0)
         {
             b[x] = 0;
         }
