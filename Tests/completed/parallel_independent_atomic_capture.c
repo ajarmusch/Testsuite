@@ -25,7 +25,7 @@ int test1(){
     }
 
     for (int x = 0; x < n; ++x){
-        if (fabs((a[x] + 1) - b[x]) > PRECISION){
+        if (fabs(a[x] - (b[x] + 1)) > PRECISION){
             err += 1;
         }
     }
