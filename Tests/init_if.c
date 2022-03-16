@@ -6,6 +6,7 @@ int test1(){
     srand(SEED);
     real_t * a = (real_t *)malloc(n * sizeof(real_t));
     real_t * b = (real_t *)malloc(n * sizeof(real_t));
+    int host = 0;
 
     for (int x = 0; x < n; ++x){
         a[x] = rand() / (real_t)(RAND_MAX / 10);
@@ -13,7 +14,7 @@ int test1(){
     }
 
     for (int x = 0; x < n; ++x){
-        #pragma acc init if (1)
+        #pragma acc init if(host)
         {
             b[x] = a[x];
         }
@@ -36,6 +37,7 @@ int test2(){
     srand(SEED);
     real_t * a = (real_t *)malloc(n * sizeof(real_t));
     real_t * b = (real_t *)malloc(n * sizeof(real_t));
+    int dev = 0;
 
     for (int x = 0; x < n; ++x){
         a[x] = rand() / (real_t)(RAND_MAX / 10);
@@ -43,7 +45,7 @@ int test2(){
     }
 
     for (int x = 0; x < n; ++x){
-        #pragma acc init if (0)
+        #pragma acc init if(dev))
         {
             b[x] = 0;
         }
